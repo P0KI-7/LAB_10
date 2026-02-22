@@ -4,32 +4,40 @@
 
 #include <string>
 #include <vector>
+#include <functional>
 
 
  template <class T>
 class MyPipeline
 {
-//  std::string name;
-
+    std::vector<Step> steps;
 public:
     // Basic methods
-    MyPipeline();
-    size_t size() const;
-    bool empty() const;
-    void clear();
+    MyPipeline() : steps() {};
+    size_t size() const { return steps.size() };
+    bool empty() const { return steps.empty() };
+    void clear() { steps.clear() };
 
     // Adding step
-    void addStep(const std::string& name, F func);
+    //template<class F>
+    //void addStep(const std::string& name, F func);
     // Remove step
-    void removeStep(size_t index);
+    //void removeStep(size_t index);
     // Run pipeline
-    T run(T value) const;
+    //T run(T value) const;
     // Trace
-    std::vector<T> trace(T value const);
+    //std::vector<T> trace(T value const);
 
     // Out <<
 //  operator<<
 
+};
+ 
+ template <class T>
+struct Step
+{
+    std::string name;
+    std::function<T(T)> func;
 };
 
 #endif // MyPipeline_hpp
