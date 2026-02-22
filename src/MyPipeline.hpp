@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <stdexcept>
 
 
  template <class T>
@@ -50,7 +51,7 @@ template<class F>
 void MyPipeline<T>::addStep(const std::string& name, F func)
 {
     if (name.empty()) {
-        //;
+        throw std::invalid_argument("Step name cannot be empty");
     }
     steps.push_back({name, std::function<T(T)>(func)});
 }
@@ -59,7 +60,7 @@ template<class T>
 void MyPipeline<T>::removeStep(size_t index)
 {
     if (index >= steps.size()) {
-        //;
+        throw std::out_of_range("removeStep: index out of range");
     }
     steps.erase(steps.begin() + index);
 }
@@ -79,7 +80,7 @@ std::vector<T> MyPipeline<T>::trace(T value) const
     std::vector<T> tr;
     T current = value;
     for (auto &step : steps) {
-        current = step.func(value);
+        current = step.func(current);
         tr.push_back(current);
     }
     return tr;
@@ -88,7 +89,7 @@ std::vector<T> MyPipeline<T>::trace(T value) const
 template<class U>
 std::ostream& operator<<(std::ostream& os, const MyPipeline<U>& p)
 {
-    os << :"Pipekines step: " << p.steps.size() << std::endl;
+    os << "Pipekines step: " << p.steps.size() << std::endl;
     for (size_t i = 0; i < p.steps.size(); ++i) {
         os << i << ") " << p.steps[i].name << std::endl;
     }
