@@ -2,6 +2,7 @@
 #define MyPipeline_hpp
 
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <functional>
@@ -39,8 +40,8 @@ public:
     std::vector<T> trace(T value) const;
 
     // Out <<
-//  operator<<
-
+    template<class U>
+    friend std::ostream& operator<<(std::ostream& os, const MyPipeline<U>& p);
 };
  
 
@@ -49,7 +50,7 @@ template<class F>
 void MyPipeline<T>::addStep(const std::string& name, F func)
 {
     if (name.empty()) {
-        ;
+        //;
     }
     steps.push_back({name, std::function<T(T)>(func)});
 }
@@ -58,7 +59,7 @@ template<class T>
 void MyPipeline<T>::removeStep(size_t index)
 {
     if (index >= steps.size()) {
-        ;
+        //;
     }
     steps.erase(steps.begin() + index);
 }
@@ -82,6 +83,16 @@ std::vector<T> MyPipeline<T>::trace(T value) const
         tr.push_back(current);
     }
     return tr;
+}
+
+template<class U>
+std::ostream& operator<<(std::ostream& os, const MyPipeline<U>& p)
+{
+    os << :"Pipekines step: " << p.steps.size() << std::endl;
+    for (size_t i = 0; i < p.steps.size(); ++i) {
+        os << i << ") " << p.steps[i].name << std::endl;
+    }
+    return os;
 }
 
 #endif // MyPipeline_hpp
