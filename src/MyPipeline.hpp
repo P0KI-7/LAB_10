@@ -33,10 +33,10 @@ public:
     void removeStep(size_t index);
     
     // Run pipeline
-    //T run(T value) const;
+    T run(T value) const;
     
     // Trace
-    //std::vector<T> trace(T value const);
+    std::vector<T> trace(T value) const;
 
     // Out <<
 //  operator<<
@@ -63,6 +63,25 @@ void MyPipeline<T>::removeStep(size_t index)
     steps.erase(steps.begin() + index);
 }
 
+template<class T>
+T MyPipeline<T>::run(T value) const
+{
+    for (auto &step : steps) {
+        value = step.func(value);
+    }
+    return value;
+}
 
+template<class T>
+std::vector<T> MyPipeline<T>::trace(T value) const
+{
+    std::vector<T> tr;
+    T current = value;
+    for (auto &step : steps) {
+        current = step.func(value);
+        tr.push_back(current);
+    }
+    return tr;
+}
 
 #endif // MyPipeline_hpp
